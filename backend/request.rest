@@ -15,3 +15,16 @@ Content-Type: application/json
   "age": 18,
   "salary": 5500000
 }
+
+###
+PUT http://localhost:5000/employees/2
+Content-Type: application/json
+
+{
+  "first_name": "Michael",
+  "last_name": "Danda",
+  "department": "IT - FullStack",
+  "gender": "Female",
+  "age": 18,
+  "salary": 8000000
+}

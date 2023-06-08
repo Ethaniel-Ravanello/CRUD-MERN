@@ -32,7 +32,7 @@ export const createEmployee = async (req, res) => {
 
 export const updateEmployee = async (req, res) => {
   try {
-    await Employee.create(req.body, {
+    await Employee.update(req.body, {
       where: {
         id: req.params.id,
       },
@@ -45,7 +45,7 @@ export const updateEmployee = async (req, res) => {
 
 export const deleteEmployee = async (req, res) => {
   try {
-    await Employee.create({
+    await Employee.destroy({
       where: {
         id: req.params.id,
       },
