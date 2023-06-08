@@ -22,9 +22,12 @@ Content-Type: application/json
 
 {
   "first_name": "Michael",
-  "last_name": "Danda",
+  "last_name": "Salamanca",
   "department": "IT - FullStack",
   "gender": "Female",
   "age": 18,
   "salary": 8000000
 }
+
+###
+DELETE  http://localhost:5000/employees/4
