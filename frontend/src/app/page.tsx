@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Employee {
   id: number;
@@ -106,7 +107,8 @@ export default function Home() {
             </button>
           </form>
         </div>
-        <div className="bg-accent w-[800px] h-[400px] rounded-lg">
+
+        <div className="bg-accent w-fit h-[400px] rounded-lg">
           <table className="min-w-full rounded-lg">
             <thead>
               <tr>
@@ -121,12 +123,13 @@ export default function Home() {
                 <th className="py-2 px-4 text-left text-gray-300">Gender</th>
                 <th className="py-2 px-4 text-left text-gray-300">Age</th>
                 <th className="py-2 px-4 text-left text-gray-300">Salary</th>
+                <th className="py-2 px-4 text-left text-gray-300">Option</th>
               </tr>
             </thead>
             <tbody>
               {employee.map((data: Employee, index: number) => (
                 <tr className={index % 2 === 0 ? "bg-table" : ""} key={data.id}>
-                  <td className="py-2 px-4 text-left text-gray-300">
+                  <td className="py-2 text-center text-gray-300">
                     {index + 1}
                   </td>
                   <td className="py-2 px-4 text-left text-gray-300">
@@ -146,6 +149,19 @@ export default function Home() {
                   </td>
                   <td className="py-2 px-4 text-left text-gray-300">
                     {data.salary.toLocaleString()}
+                  </td>
+                  <td className="py-2 px-4 text-left text-gray-300">
+                    <div className="flex gap-x-7">
+                      <Link
+                        className="bg-green-800 text-white px-5 py-2 rounded-lg"
+                        href="/update"
+                      >
+                        Update
+                      </Link>
+                      <button className="bg-red-800 text-white px-5 py-2 rounded-lg">
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
