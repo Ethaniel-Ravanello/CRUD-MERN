@@ -1,0 +1,17 @@
+GET http://localhost:5000/employees
+
+###
+GET http://localhost:5000/employees/2
+
+###
+POST http://localhost:5000/employees
+Content-Type: application/json
+
+{
+  "first_name": "Rafi",
+  "last_name": "Kadafi",
+  "department": "Buseniss Management",
+  "gender": "Male",
+  "age": 18,
+  "salary": 5500000
+}
