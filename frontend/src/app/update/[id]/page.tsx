@@ -2,10 +2,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
-const page = () => {
+interface PageParams {
+  id: number;
+}
+
+const page = ({ params }: { params: PageParams }) => {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [department, setDepartment] = useState("");
@@ -13,10 +17,18 @@ const page = () => {
   const [age, setAge] = useState(0);
   const [salary, setSalary] = useState(0);
 
+  const router = useRouter();
+
   const getEmployeeById = async () => {
     await axios
-      .get("http://localhost:5000/employees")
+      .get(`http://localhost:5000/employees/${params.id}`)
       .then((res) => {
+        setFirstName(res.data.first_name);
+        setLastName(res.data.last_name);
+        setDepartment(res.data.department);
+        setGender(res.data.gender);
+        setAge(res.data.age);
+        setSalary(res.data.salary);
         console.log(res.data);
       })
       .catch((err) => {
@@ -27,7 +39,7 @@ const page = () => {
   const editEmployee = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await axios
-      .post("http://localhost:5000/employees/", {
+      .put(`http://localhost:5000/employees/${params.id}`, {
         first_name,
         last_name,
         department,
@@ -38,11 +50,17 @@ const page = () => {
       .then((res) => {
         console.log(res);
         getEmployeeById();
+        router.push("/");
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  useEffect(() => {
+    getEmployeeById();
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center align-middle justify-between p-24">
       <div className="bg-accent w-full h-full rounded-lg">
@@ -51,6 +69,7 @@ const page = () => {
             First Name
           </label>
           <input
+            key="firstName"
             type="text"
             value={first_name}
             onChange={(e) => setFirstName(e.target.value)}
@@ -128,7 +147,7 @@ const page = () => {
             className="p-2 rounded text-black"
           />
 
-          <button type="submit" className="p-2 bg-button text-white rounded">
+          <button type="submit" className="p-2 bg-slate-800 text-white rounded">
             Update
           </button>
         </form>

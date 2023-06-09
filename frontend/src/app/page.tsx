@@ -157,7 +157,10 @@ export default function Home() {
               className="p-2 rounded text-black"
             />
 
-            <button type="submit" className="p-2 bg-button text-white rounded">
+            <button
+              type="submit"
+              className="p-2 bg-slate-800 text-white rounded"
+            >
               Submit
             </button>
           </form>
