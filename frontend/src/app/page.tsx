@@ -17,6 +17,13 @@ interface Employee {
 export default function Home() {
   const [employee, setEmployee] = useState([]);
 
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState(0);
+  const [salary, setSalary] = useState(0);
+
   const getEmployee = async () => {
     await axios
       .get("http://localhost:5000/employees")
@@ -29,19 +36,53 @@ export default function Home() {
       });
   };
 
+  const addEmployee = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await axios
+      .post("http://localhost:5000/employees", {
+        first_name,
+        last_name,
+        department,
+        gender,
+        age,
+        salary,
+      })
+      .then((res) => {
+        console.log(res);
+        getEmployee();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteEmployee = async (id: number) => {
+    await axios
+      .delete(`http://localhost:5000/employees/${id}`)
+      .then((res) => {
+        console.log(res);
+        getEmployee();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     getEmployee();
   }, []);
   return (
     <main className="flex min-h-screen flex-col items-center align-middle justify-between p-24">
       <div className="flex gap-x-10">
-        <div className="bg-accent w-[410px] h-full rounded-lg">
-          <form className="flex flex-col gap-y-4 p-4">
+        <div className="bg-accent w-full h-full rounded-lg">
+          <form onSubmit={addEmployee} className="flex flex-col gap-y-4 p-4">
             <label htmlFor="firstName" className="font-semibold text-white">
               First Name
             </label>
             <input
               type="text"
+              value={first_name}
+              onChange={(e) => setFirstName(e.target.value)}
               id="firstName"
               name="firstName"
               placeholder="First Name"
@@ -53,6 +94,8 @@ export default function Home() {
             </label>
             <input
               type="text"
+              value={last_name}
+              onChange={(e) => setLastName(e.target.value)}
               id="lastName"
               name="lastName"
               placeholder="Last Name"
@@ -64,6 +107,8 @@ export default function Home() {
             </label>
             <input
               type="text"
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
               id="department"
               name="department"
               placeholder="Department"
@@ -73,11 +118,17 @@ export default function Home() {
             <label htmlFor="gender" className="font-semibold text-white">
               Gender
             </label>
-            <select id="gender" name="gender" className="p-2 rounded ">
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              id="gender"
+              name="gender"
+              className="p-2 rounded "
+            >
               <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
 
             <label htmlFor="age" className="font-semibold text-white">
@@ -85,6 +136,8 @@ export default function Home() {
             </label>
             <input
               type="number"
+              value={age}
+              onChange={(e) => setAge(parseInt(e.target.value, 10))}
               id="age"
               name="age"
               placeholder="Age"
@@ -96,6 +149,8 @@ export default function Home() {
             </label>
             <input
               type="number"
+              value={salary}
+              onChange={(e) => setSalary(parseInt(e.target.value, 10))}
               id="salary"
               name="salary"
               placeholder="Salary"
@@ -108,7 +163,7 @@ export default function Home() {
           </form>
         </div>
 
-        <div className="bg-accent w-fit h-[400px] rounded-lg">
+        <div className="bg-accent w-fit h-fit rounded-lg">
           <table className="min-w-full rounded-lg">
             <thead>
               <tr>
@@ -126,9 +181,14 @@ export default function Home() {
                 <th className="py-2 px-4 text-left text-gray-300">Option</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="rounded-lg">
               {employee.map((data: Employee, index: number) => (
-                <tr className={index % 2 === 0 ? "bg-table" : ""} key={data.id}>
+                <tr
+                  className={
+                    index % 2 === 0 ? "bg-table rounded-lg" : "rounded-lg"
+                  }
+                  key={data.id}
+                >
                   <td className="py-2 text-center text-gray-300">
                     {index + 1}
                   </td>
@@ -148,17 +208,20 @@ export default function Home() {
                     {data.age}
                   </td>
                   <td className="py-2 px-4 text-left text-gray-300">
-                    {data.salary.toLocaleString()}
+                    {data.salary?.toLocaleString()}
                   </td>
                   <td className="py-2 px-4 text-left text-gray-300">
                     <div className="flex gap-x-7">
                       <Link
                         className="bg-green-800 text-white px-5 py-2 rounded-lg"
-                        href="/update"
+                        href={`/update/${data.id}`}
                       >
                         Update
                       </Link>
-                      <button className="bg-red-800 text-white px-5 py-2 rounded-lg">
+                      <button
+                        onClick={() => deleteEmployee(data.id)}
+                        className="bg-red-800 text-white px-5 py-2 rounded-lg"
+                      >
                         Delete
                       </button>
                     </div>
